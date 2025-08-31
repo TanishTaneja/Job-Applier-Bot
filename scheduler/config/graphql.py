@@ -32,7 +32,6 @@ def make_graphql_request(query: str, variables: dict = None):
         GRAPHQL_BASE_URL,
         data=json.dumps(payload),
         headers=headers,
-        timeout=15  # optional timeout
     )
 
     return response.json()

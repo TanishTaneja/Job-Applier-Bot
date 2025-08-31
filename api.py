@@ -73,7 +73,9 @@ def update_application(applicationId, jobId, scheduleId):
         }
         response = requests.put(url, headers=headers, json=payload, timeout=15)
         try:
-            return response.json()
+            if response.status_code == 200:
+                return response.json()
+            return None
         except json.JSONDecodeError:
             return {"error": "Invalid JSON response", "raw_text": response.text}
     except requests.exceptions.Timeout:
@@ -110,7 +112,6 @@ def update_application_flow(applicationId, jobId, scheduleId):
     try:
         response = requests.put(url, headers=headers, json=payload, timeout=20)
         response.raise_for_status()  # raises an error for 4xx/5xx
-        print("✅ Success:", response.json())
     except requests.exceptions.RequestException as e:
         print("❌ Error:", e)
 
@@ -120,16 +121,16 @@ def init_application(jobId: str, scheduleId: str):
         jobId=jobId,
         scheduleId=scheduleId,
     )
-    print(f"Application ID: {applicationId}")
     if applicationId != None:
         response = update_application(
             applicationId=applicationId,
             jobId=jobId,
             scheduleId=scheduleId,
         )
-        update_application_flow(
-            applicationId=applicationId,
-            jobId=jobId,
-            scheduleId=scheduleId
-        )
+        if response and not response.get('error'):
+            update_application_flow(
+                applicationId=applicationId,
+                jobId=jobId,
+                scheduleId=scheduleId
+            )
         print(f"Response: {response}")

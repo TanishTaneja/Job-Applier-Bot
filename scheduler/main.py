@@ -56,7 +56,5 @@ def init_jobs() -> Tuple[str, str]:
     schedule_id = first_schedule.get("scheduleId")
     if not isinstance(schedule_id, str):
         return None, None
-
-    print(f"Applying for jobId: {job_id} with scheduleId: {schedule_id}")
-    append_to_json_file("./jobs.json", f"Applied for jobId: {job_id} with scheduleId: {schedule_id}")
+    
     return job_id, schedule_id

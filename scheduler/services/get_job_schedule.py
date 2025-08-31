@@ -109,17 +109,14 @@ def get_job_schedule(job_id: str) -> List[dict]:
 
     data = response_data.get("data")
     if not isinstance(data, dict):
-        print("Error: 'data' field missing or invalid")
         return []
 
     search_schedules = data.get("searchScheduleCards")
     if not isinstance(search_schedules, dict):
-        print("Error: 'searchScheduleCards' field missing or invalid")
         return []
 
     schedule_cards = search_schedules.get("scheduleCards")
     if not isinstance(schedule_cards, list):
-        print("Error: 'scheduleCards' field missing or invalid")
         return []
 
     return schedule_cards

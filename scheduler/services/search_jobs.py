@@ -89,17 +89,14 @@ def get_search_jobs() -> List[Dict[str, Any]]:
 
     data = response_data.get("data")
     if not isinstance(data, dict):
-        print("Error: 'data' field missing or invalid")
         return []
 
     search_jobs = data.get("searchJobCardsByLocation")
     if not isinstance(search_jobs, dict):
-        print("Error: 'searchJobCardsByLocation' field missing or invalid")
         return []
 
     job_cards = search_jobs.get("jobCards")
     if not isinstance(job_cards, list):
-        print("Error: 'jobCards' field missing or invalid")
         return []
 
     return job_cards

@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.edge.options import Options
 import re
 import imaplib
 import email
@@ -10,7 +10,6 @@ import threading
 from data import set_data
 from scheduler.main import init_jobs
 from api import init_application
-from concurrent.futures import ThreadPoolExecutor
 
 options = Options()
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
@@ -117,7 +116,7 @@ def update_login_info(driver):
         time.sleep(300)
 
 def init():
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Edge(options=options)
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
@@ -128,14 +127,13 @@ def init():
     t1 = threading.Thread(target=update_login_info, args=(driver,))
     t1.start()
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
-        while True:
-            try:
-                jobId, scheduleId = init_jobs()
-                if jobId and scheduleId:
-                    executor.submit(init_application, jobId=jobId, scheduleId=scheduleId)
-            except Exception as e:
-                print(f"Error: {e}")
+    while True:
+        try:
+            jobId, scheduleId = init_jobs()
+            if jobId and scheduleId:
+                init_application(jobId=jobId, scheduleId=scheduleId)
+        except Exception as e:
+            print(f"Error: {e}")
 
 if __name__=="__main__":
     init()
