@@ -120,18 +120,22 @@ def init():
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
-    start=time.time()
+    # start=time.time()
     login(imap_pass=IMAP_PASS,imap_user=IMAP_USER,driver=driver, email="ajass7134@gmail.com", pin="123789")
-    print(time.time()-start)
+    # print(time.time()-start)
 
-    t1 = threading.Thread(target=update_login_info, args=(driver,))
-    t1.start()
+    # t1 = threading.Thread(target=update_login_info, args=(driver,))
+    # t1.start()
 
     while True:
         try:
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
-                init_application(jobId=jobId, scheduleId=scheduleId)
+                targetUrl = f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1#/consent?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1"
+                driver.get(targetUrl)
+                time.sleep(5)
+                driver.find_element(By.XPATH, "//button[.//div[text()='Create Application']]").click()
+                # init_application(jobId=jobId, scheduleId=scheduleId)
         except Exception as e:
             print(f"Error: {e}")
 
