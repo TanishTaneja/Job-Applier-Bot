@@ -57,8 +57,8 @@ def get_search_jobs_query() -> Tuple[str, Dict[str, Any]]:
 
     variables = {
         "searchJobRequest": {
-            "locale": "en-CA",
-            "country": "Canada",
+            "locale": "en-US",
+            "country": "United States",
             "dateFilters": [
                 {
                     "key": "firstDayOnSite",

@@ -76,8 +76,8 @@ def get_job_schedule_query(job_id: str) -> tuple[str, dict[str, Any]]:
 
     variables = {
         "searchScheduleRequest": {
-            "locale": "en-CA",
-            "country": "Canada",
+            "locale": "en-US",
+            "country": "United States",
             "dateFilters": [
                 {
                     "key": "firstDayOnSite",

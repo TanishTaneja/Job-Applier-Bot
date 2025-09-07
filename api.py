@@ -2,21 +2,53 @@ import requests
 import json
 from data import get_data
 
+def get_csrf_token():
+    data = get_data()
+    cookies = data.get("cookies")
+
+    url = "https://hiring.amazon.com/authorize/api/csrf"
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
+        "access-control-allow-origin": "*",
+        "priority": "u=1, i",
+        "referer": "https://hiring.amazon.com/application/us/",
+        "sec-ch-ua": '"Not;A=Brand";v="99", "Microsoft Edge";v="139", "Chromium";v="139"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0"
+    }
+    try:
+        response = requests.get(url, headers=headers, cookies=cookies)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.Timeout:
+        return {"error": "Request timed out"}
+    except requests.exceptions.ConnectionError as e:
+        return {"error": "Connection failed", "details": str(e)}
+    except requests.exceptions.HTTPError as e:
+        return {"error": "HTTP error", "status_code": response.status_code, "details": str(e)}
+    except Exception as e:
+        return {"error": "Unexpected error", "details": str(e)}
+
 def authorize(jobId, scheduleId):
     accessToken = get_data().get("accessToken")
     cookies = get_data().get("cookies")
-    sessionToken = get_data().get("sessionToken")
-    url = "https://hiring.amazon.ca/authorize/api/authorize"
+    sessionToken = get_csrf_token()
+    url = "https://hiring.amazon.com/authorize/api/authorize"
     headers = {
         "accept": "application/json, text/plain, */*",
-        "accept-language": "en-CA,en;q=0.9,en-IN;q=0.8",
+        "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
         "access-control-allow-origin": "*",
         "authorization": accessToken,
         "content-type": "application/json",
         "csrf-token": sessionToken,
-        "origin": "https://hiring.amazon.ca",
+        "origin": "https://hiring.amazon.com",
         "priority": "u=1, i",
-        "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
+        "referer": f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
         "sec-ch-ua": '"Not;A=Brand";v="99", "Microsoft Edge";v="139", "Chromium";v="139"',
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": '"Windows"',
@@ -26,7 +58,7 @@ def authorize(jobId, scheduleId):
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0"
     }
     data = {
-        "redirectUrl": "hiring.amazon.ca",
+        "redirectUrl": "hiring.amazon.com",
         "token": sessionToken
     }
     try:
@@ -46,17 +78,17 @@ def make_request(jobId, scheduleId):
     cookies = get_data().get("cookies")
     accessToken = get_data().get("accessToken")
     candidateId = get_data().get("candidateId")
-    url = "https://hiring.amazon.ca/application/api/candidate-application/ds/create-application"
+    url = "https://hiring.amazon.com/application/api/candidate-application/ds/create-application"
     
     try:
         headers = {
             "accept": "application/json, text/plain, */*",
-            "accept-language": "en-CA,en;q=0.9,en-IN;q=0.8",
+            "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
             "authorization": accessToken,
             "bb-ui-version": "bb-ui-v2",
             "content-type": "application/json;charset=UTF-8",
-            "origin": "https://hiring.amazon.ca",
-            "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
+            "origin": "https://hiring.amazon.com",
+            "referer": f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
             "cookie": cookies,
         }
@@ -88,17 +120,17 @@ def make_request(jobId, scheduleId):
 def update_application(applicationId, jobId, scheduleId):
     cookies = get_data().get("cookies")
     accessToken = get_data().get("accessToken")
-    url = "https://hiring.amazon.ca/application/api/candidate-application/update-application"
+    url = "https://hiring.amazon.com/application/api/candidate-application/update-application"
     
     try:
         headers = {
             "accept": "application/json, text/plain, */*",
-            "accept-language": "en-CA,en;q=0.9,en-IN;q=0.8",
+            "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
             "authorization": accessToken,
             "bb-ui-version": "bb-ui-v2",
             "content-type": "application/json;charset=UTF-8",
-            "origin": "https://hiring.amazon.ca",
-            "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
+            "origin": "https://hiring.amazon.com",
+            "referer": f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
             "cookie": cookies,
         }
@@ -130,16 +162,16 @@ def update_application(applicationId, jobId, scheduleId):
 def update_application_flow(applicationId, jobId, scheduleId):
     cookies = get_data().get("cookies")
     accessToken = get_data().get("accessToken")
-    url = "https://hiring.amazon.ca/application/api/candidate-application/update-workflow-step-name"
+    url = "https://hiring.amazon.com/application/api/candidate-application/update-workflow-step-name"
 
     headers = {
         "accept": "application/json, text/plain, */*",
-        "accept-language": "en-CA,en;q=0.9,en-IN;q=0.8",
+        "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
         "authorization": accessToken,
         "bb-ui-version": "bb-ui-v2",
         "content-type": "application/json;charset=UTF-8",
-        "origin": "https://hiring.amazon.ca",
-        "referer": f"https://hiring.amazon.ca/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
+        "origin": "https://hiring.amazon.com",
+        "referer": f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
         "Cookie": cookies
     }

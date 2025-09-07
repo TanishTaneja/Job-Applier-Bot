@@ -64,7 +64,7 @@ def login(imap_user,imap_pass,driver, email, pin):
     time.sleep(2)
     # Select Country
     driver.find_element(By.ID, "country-toggle-button").click()
-    driver.find_element(By.XPATH, "//div[contains(text(),'Canada')]").click()
+    driver.find_element(By.XPATH, "//div[contains(text(),'United States')]").click()
     time.sleep(5)
 
     # Enter email
@@ -100,8 +100,9 @@ def login(imap_user,imap_pass,driver, email, pin):
     accessToken = driver.execute_script("return window.localStorage.getItem('accessToken');")
 
     cookies_header = "; ".join([f"{c['name']}={c['value']}" for c in cookies["cookies"]])
+    sessionToken = driver.execute_script("return window.localStorage.getItem('sessionToken');")
 
-    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"))
+    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"), sessionToken=sessionToken)
 
 def update_login_info(driver):
     while True:
@@ -133,8 +134,10 @@ def init():
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
                 init_application(jobId=jobId, scheduleId=scheduleId)
+                break
         except Exception as e:
             print(f"Error: {e}")
+    driver.quit()
 
 if __name__=="__main__":
     init()
