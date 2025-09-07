@@ -131,7 +131,7 @@ def init():
         try:
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
-                targetUrl = f"https://hiring.amazon.com/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1#/consent?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1"
+                targetUrl = f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1#/consent?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1"
                 driver.get(targetUrl)
                 time.sleep(5)
                 driver.find_element(By.XPATH, "//button[.//div[text()='Create Application']]").click()
