@@ -106,13 +106,14 @@ def login(imap_user,imap_pass,driver, email, pin):
 def update_login_info(driver):
     while True:
         driver.refresh()
-        time.sleep(5)
+        time.sleep(20)
         cookies = driver.execute_cdp_cmd("Network.getAllCookies", {})
         accessToken = driver.execute_script("return window.localStorage.getItem('accessToken');")
         candidateId = driver.execute_script("return window.localStorage.getItem('bbCandidateId');")
         cookies_header = "; ".join([f"{c['name']}={c['value']}" for c in cookies["cookies"]])
+        sessionToken = driver.execute_script("return window.localStorage.getItem('sessionToken');")
 
-        set_data(cookies=cookies_header, accessToken=accessToken, candidateId=candidateId)
+        set_data(cookies=cookies_header, accessToken=accessToken, candidateId=candidateId, sessionToken=sessionToken)
         time.sleep(300)
 
 def init():
@@ -124,18 +125,14 @@ def init():
     login(imap_pass=IMAP_PASS,imap_user=IMAP_USER,driver=driver, email="ajass7134@gmail.com", pin="123789")
     # print(time.time()-start)
 
-    # t1 = threading.Thread(target=update_login_info, args=(driver,))
-    # t1.start()
+    t1 = threading.Thread(target=update_login_info, args=(driver,))
+    t1.start()
 
     while True:
         try:
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
-                targetUrl = f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1#/consent?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1"
-                driver.get(targetUrl)
-                time.sleep(5)
-                driver.find_element(By.XPATH, "//button[.//div[text()='Create Application']]").click()
-                # init_application(jobId=jobId, scheduleId=scheduleId)
+                init_application(jobId=jobId, scheduleId=scheduleId)
         except Exception as e:
             print(f"Error: {e}")
 

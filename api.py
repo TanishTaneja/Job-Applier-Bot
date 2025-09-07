@@ -2,6 +2,46 @@ import requests
 import json
 from data import get_data
 
+def authorize(jobId, scheduleId):
+    accessToken = get_data().get("accessToken")
+    cookies = get_data().get("cookies")
+    sessionToken = get_data().get("sessionToken")
+    url = "https://hiring.amazon.ca/authorize/api/authorize"
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-CA,en;q=0.9,en-IN;q=0.8",
+        "access-control-allow-origin": "*",
+        "authorization": accessToken,
+        "content-type": "application/json",
+        "csrf-token": sessionToken,
+        "origin": "https://hiring.amazon.ca",
+        "priority": "u=1, i",
+        "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
+        "sec-ch-ua": '"Not;A=Brand";v="99", "Microsoft Edge";v="139", "Chromium";v="139"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0"
+    }
+    data = {
+        "redirectUrl": "hiring.amazon.ca",
+        "token": sessionToken
+    }
+    try:
+        response = requests.post(url, headers=headers, cookies=cookies, json=data, timeout=15)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.Timeout:
+        return {"error": "Request timed out"}
+    except requests.exceptions.ConnectionError as e:
+        return {"error": "Connection failed", "details": str(e)}
+    except requests.exceptions.HTTPError as e:
+        return {"error": "HTTP error", "status_code": response.status_code, "details": str(e)}
+    except Exception as e:
+        return {"error": "Unexpected error", "details": str(e)}
+
 def make_request(jobId, scheduleId):
     cookies = get_data().get("cookies")
     accessToken = get_data().get("accessToken")
@@ -117,6 +157,7 @@ def update_application_flow(applicationId, jobId, scheduleId):
 
     
 def init_application(jobId: str, scheduleId: str):
+    authorize(jobId=jobId, scheduleId=scheduleId)
     applicationId = make_request(
         jobId=jobId,
         scheduleId=scheduleId,
