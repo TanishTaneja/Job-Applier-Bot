@@ -100,8 +100,9 @@ def login(imap_user,imap_pass,driver, email, pin):
     accessToken = driver.execute_script("return window.localStorage.getItem('accessToken');")
 
     cookies_header = "; ".join([f"{c['name']}={c['value']}" for c in cookies["cookies"]])
+    sessionToken = driver.execute_script("return window.localStorage.getItem('sessionToken');")
 
-    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"))
+    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"), sessionToken=sessionToken)
 
 def update_login_info(driver):
     while True:
