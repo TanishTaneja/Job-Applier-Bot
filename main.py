@@ -98,11 +98,12 @@ def login(imap_user,imap_pass,driver, email, pin):
 
     cookies = driver.execute_cdp_cmd("Network.getAllCookies", {})
     accessToken = driver.execute_script("return window.localStorage.getItem('accessToken');")
+    candidateId = driver.execute_script("return window.localStorage.getItem('bbCandidateId');")
 
     cookies_header = "; ".join([f"{c['name']}={c['value']}" for c in cookies["cookies"]])
     sessionToken = driver.execute_script("return window.localStorage.getItem('sessionToken');")
 
-    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"), sessionToken=sessionToken)
+    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=candidateId, sessionToken=sessionToken)
 
 def update_login_info(driver):
     while True:
@@ -134,6 +135,7 @@ def init():
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
                 init_application(jobId=jobId, scheduleId=scheduleId)
+                time.sleep(10000000)
                 break
         except Exception as e:
             print(f"Error: {e}")

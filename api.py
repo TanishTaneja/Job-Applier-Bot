@@ -1,6 +1,7 @@
 import requests
 import json
 from data import get_data
+from socket_setup import connect
 
 def get_csrf_token():
     data = get_data()
@@ -183,6 +184,7 @@ def update_application_flow(applicationId, jobId, scheduleId):
 
     try:
         response = requests.put(url, headers=headers, json=payload, timeout=20)
+        print(f"Response: {response}")
         response.raise_for_status()  # raises an error for 4xx/5xx
     except requests.exceptions.RequestException as e:
         print("❌ Error:", e)
@@ -206,4 +208,5 @@ def init_application(jobId: str, scheduleId: str):
                 jobId=jobId,
                 scheduleId=scheduleId
             )
+            connect(applicationId=applicationId, jobId=jobId, scheduleId=scheduleId)
         print(f"Response: {response}")
