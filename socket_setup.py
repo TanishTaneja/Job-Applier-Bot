@@ -43,7 +43,7 @@ def on_message(ws, message):
         elif stepName == "general-questions":
             ws.close()
         else:
-            print("Unknown step: " + stepName)
+            print(f"Unknown message: {message}")
             ws.close()
     except Exception as e:
         print("Error occured with message: " + message)

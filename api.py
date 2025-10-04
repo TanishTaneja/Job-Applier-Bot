@@ -92,6 +92,7 @@ def make_request(jobId, scheduleId):
             "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
             "cookie": cookies,
+            "Connection": "keep-alive"
         }
         payload = {
             "jobId": jobId,
@@ -133,6 +134,7 @@ def update_application(applicationId, jobId, scheduleId):
             "referer": f"https://hiring.amazon.ca/application/ca/?CS=true&jobId={jobId}&locale=en-CA&scheduleId={scheduleId}&ssoEnabled=1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
             "cookie": cookies,
+            "Connection": "keep-alive"
         }
         payload = {
             "applicationId": applicationId,
@@ -173,7 +175,8 @@ def update_application_flow(applicationId, jobId, scheduleId):
         "origin": "https://hiring.amazon.ca",
         "referer": f"https://hiring.amazon.ca/application/us/?CS=true&jobId={jobId}&locale=en-US&scheduleId={scheduleId}&ssoEnabled=1",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0",
-        "Cookie": cookies
+        "Cookie": cookies,
+        "Connection": "keep-alive"
     }
 
     payload = {

@@ -17,6 +17,7 @@ def set_graphql_headers():
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "cross-site",
         "country": "Canada",
+        "Connection": "keep-alive"
     }
 
 
