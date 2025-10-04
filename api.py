@@ -1,6 +1,7 @@
 import requests
 import json
 from data import get_data
+from socket_setup import connect
 
 def get_csrf_token():
     data = get_data()
@@ -100,7 +101,6 @@ def make_request(jobId, scheduleId):
             "activeApplicationCheckEnabled": True
         }
         response = requests.post(url, headers=headers, json=payload, timeout=15)
-        print(f"Appilication Response: {response}")
         try:
             if response.status_code == 200:
                 res = response.json()
@@ -189,7 +189,7 @@ def update_application_flow(applicationId, jobId, scheduleId):
 
     
 def init_application(jobId: str, scheduleId: str):
-    authorize(jobId=jobId, scheduleId=scheduleId)
+    # authorize(jobId=jobId, scheduleId=scheduleId)
     applicationId = make_request(
         jobId=jobId,
         scheduleId=scheduleId,
@@ -206,4 +206,5 @@ def init_application(jobId: str, scheduleId: str):
                 jobId=jobId,
                 scheduleId=scheduleId
             )
-        print(f"Response: {response}")
+            connect(applicationId=applicationId, jobId=jobId, scheduleId=scheduleId)
+            print(f"Selected -> JobId: {jobId}, ScheduleId: {scheduleId}")

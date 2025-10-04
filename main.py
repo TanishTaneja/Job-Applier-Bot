@@ -98,11 +98,12 @@ def login(imap_user,imap_pass,driver, email, pin):
 
     cookies = driver.execute_cdp_cmd("Network.getAllCookies", {})
     accessToken = driver.execute_script("return window.localStorage.getItem('accessToken');")
+    candidateId = driver.execute_script("return window.localStorage.getItem('bbCandidateId');")
 
     cookies_header = "; ".join([f"{c['name']}={c['value']}" for c in cookies["cookies"]])
     sessionToken = driver.execute_script("return window.localStorage.getItem('sessionToken');")
 
-    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=driver.execute_script("return window.localStorage.getItem('bbCandidateId');"), sessionToken=sessionToken)
+    set_data(cookies=cookies_header, accessToken=accessToken, candidateId=candidateId, sessionToken=sessionToken)
 
 def update_login_info(driver):
     while True:
@@ -122,9 +123,7 @@ def init():
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
-    # start=time.time()
     login(imap_pass=IMAP_PASS,imap_user=IMAP_USER,driver=driver, email="ajass7134@gmail.com", pin="123789")
-    # print(time.time()-start)
 
     t1 = threading.Thread(target=update_login_info, args=(driver,))
     t1.start()
