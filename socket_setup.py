@@ -12,7 +12,8 @@ def getSocketUrl(applicationId, candidateId, authToken):
 def on_message(ws, message):
     try:
         decoded_message = json.loads(message)
-        if decoded_message.get("stepName") == "job-opportunities":
+        stepName = decoded_message.get("stepName")
+        if stepName == "job-opportunities":
             applicationId = get_data().get("applicationId")
             candidateId = get_data().get("candidateId")
             jobId = get_data().get("jobId")
@@ -38,14 +39,20 @@ def on_message(ws, message):
                 "filteringRegular": False
             }
             ws.send(json.dumps(generalQuestions))
-    except:
-        print(message)
+        elif stepName == "general-questions":
+            ws.close()
+        else:
+            print("Unknown step: " + stepName)
+            ws.close()
+    except Exception as e:
+        print("Error occured with message: " + message)
+        print(e)
 
 def on_error(ws, error):
     print(error)
 
 def on_close(ws, close_status_code, close_msg):
-    print("### closed ###")
+    pass
 
 def on_open(ws):
     candidateId = get_data().get("candidateId")
@@ -68,7 +75,6 @@ def on_open(ws):
         "domainType": "CS"
     }
     ws.send(json.dumps(data))
-    print("Opened connection")
 
 def connect(applicationId, jobId, scheduleId):
     accessToken = get_data().get("accessToken")

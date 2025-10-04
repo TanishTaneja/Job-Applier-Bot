@@ -22,6 +22,7 @@ def get_csrf_token():
         "sec-fetch-site": "same-origin",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0"
     }
+
     try:
         response = requests.get(url, headers=headers, cookies=cookies)
         response.raise_for_status()
@@ -101,7 +102,6 @@ def make_request(jobId, scheduleId):
             "activeApplicationCheckEnabled": True
         }
         response = requests.post(url, headers=headers, json=payload, timeout=15)
-        print(f"Appilication Response: {response}")
         try:
             if response.status_code == 200:
                 res = response.json()
@@ -184,11 +184,9 @@ def update_application_flow(applicationId, jobId, scheduleId):
 
     try:
         response = requests.put(url, headers=headers, json=payload, timeout=20)
-        print(f"Response: {response}")
         response.raise_for_status()  # raises an error for 4xx/5xx
     except requests.exceptions.RequestException as e:
         print("❌ Error:", e)
-
     
 def init_application(jobId: str, scheduleId: str):
     authorize(jobId=jobId, scheduleId=scheduleId)
@@ -209,4 +207,4 @@ def init_application(jobId: str, scheduleId: str):
                 scheduleId=scheduleId
             )
             connect(applicationId=applicationId, jobId=jobId, scheduleId=scheduleId)
-        print(f"Response: {response}")
+            print(f"JobId: {jobId}, ScheduleId: {scheduleId}")

@@ -123,9 +123,8 @@ def init():
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
-    # start=time.time()
+
     login(imap_pass=IMAP_PASS,imap_user=IMAP_USER,driver=driver, email="ajass7134@gmail.com", pin="123789")
-    # print(time.time()-start)
 
     t1 = threading.Thread(target=update_login_info, args=(driver,))
     t1.start()
@@ -135,7 +134,6 @@ def init():
             jobId, scheduleId = init_jobs()
             if jobId and scheduleId:
                 init_application(jobId=jobId, scheduleId=scheduleId)
-                time.sleep(10000000)
                 break
         except Exception as e:
             print(f"Error: {e}")
