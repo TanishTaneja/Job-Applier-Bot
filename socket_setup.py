@@ -4,7 +4,7 @@ from urllib.parse import quote
 import json
 from data import set_application_data
 import datetime
-
+import time
 # websocket.enableTrace(True)
 
 def getSocketUrl(applicationId, candidateId, authToken):
@@ -87,4 +87,7 @@ def connect(applicationId, jobId, scheduleId):
         on_message=on_message,
         on_error=on_error,
         on_close=on_close)
-    ws.run_forever(reconnect=5)
+    while True:
+        ws.run_forever()
+        time.sleep(5)
+    # ws.run_forever(reconnect=5)
