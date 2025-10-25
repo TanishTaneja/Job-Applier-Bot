@@ -4,7 +4,6 @@ from urllib.parse import quote
 import json
 from data import set_application_data
 import datetime
-import time
 # websocket.enableTrace(True)
 
 def getSocketUrl(applicationId, candidateId, authToken):
@@ -13,6 +12,7 @@ def getSocketUrl(applicationId, candidateId, authToken):
 def on_message(ws, message):
     try:
         decoded_message = json.loads(message)
+        print(decoded_message)
         stepName = decoded_message.get("stepName")
         if stepName == "job-opportunities":
             applicationId = get_data().get("applicationId")
@@ -44,6 +44,7 @@ def on_message(ws, message):
             ws.close()
         else:
             print(f"Unknown message: {message}")
+            print(stepName)
             ws.close()
     except Exception as e:
         print("Error occured with message: " + message)
@@ -87,7 +88,4 @@ def connect(applicationId, jobId, scheduleId):
         on_message=on_message,
         on_error=on_error,
         on_close=on_close)
-    while True:
-        ws.run_forever()
-        time.sleep(5)
-    # ws.run_forever(reconnect=5)
+    ws.run_forever()

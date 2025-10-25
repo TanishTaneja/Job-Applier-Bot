@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.chrome.options import Options
 import re
 import imaplib
 import email
@@ -12,10 +12,12 @@ from scheduler.main import init_jobs
 from api import init_application
 
 options = Options()
+# options.add_argument('--proxy-server=http://108.162.192.12:80')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
+
 
 def get_latest_otp(email_user, email_pass, sender_filter="no-reply@jobs.amazon.com"):
     otp_code = None
@@ -119,7 +121,7 @@ def update_login_info(driver):
         time.sleep(300)
 
 def init():
-    driver = webdriver.Edge(options=options)
+    driver = webdriver.Chrome(options=options)
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
