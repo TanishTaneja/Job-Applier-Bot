@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.chrome.options import Options
 import re
 import imaplib
 import email
@@ -119,7 +119,8 @@ def update_login_info(driver):
         time.sleep(300)
 
 def init():
-    driver = webdriver.Edge(options=options)
+    # driver = webdriver.Edge(options=options)
+    driver = webdriver.Chrome(options=options)
 
     IMAP_USER = "ajass7134@gmail.com"
     IMAP_PASS = "hquededqjstcqqpc"
@@ -130,9 +131,9 @@ def init():
 
     while True:
         try:
-            jobId, scheduleId = init_jobs()
-            if jobId and scheduleId:
-                init_application(jobId=jobId, scheduleId=scheduleId)
+            job_details, schedule_details = init_jobs()
+            if job_details and schedule_details:
+                init_application(jobDetails=job_details, scheduleDetails=schedule_details)
         except Exception as e:
             print(f"Error: {e}")
 

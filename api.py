@@ -187,27 +187,37 @@ def update_application_flow(applicationId, jobId, scheduleId):
     try:
         response = requests.put(url, headers=headers, json=payload, timeout=20)
         response.raise_for_status()  # raises an error for 4xx/5xx
+        return {
+            "success": True
+        }
     except requests.exceptions.RequestException as e:
-        print("❌ Error:", e)
+        return {
+            "success": False
+        }
 
     
-def init_application(jobId: str, scheduleId: str):
-    # authorize(jobId=jobId, scheduleId=scheduleId)
-    applicationId = make_request(
-        jobId=jobId,
-        scheduleId=scheduleId,
-    )
-    if applicationId != None:
-        response = update_application(
-            applicationId=applicationId,
+def init_application(jobDetails: dict, scheduleDetails: dict):
+    jobId = jobDetails.get("job_id")
+    scheduleId = scheduleDetails.get("schedule_id")
+
+    if jobId and scheduleId:
+        authorize(jobId=jobId, scheduleId=scheduleId)
+        applicationId = make_request(
             jobId=jobId,
             scheduleId=scheduleId,
         )
-        if response and not response.get('error'):
-            update_application_flow(
+        if applicationId != None:
+            response = update_application(
                 applicationId=applicationId,
                 jobId=jobId,
-                scheduleId=scheduleId
+                scheduleId=scheduleId,
             )
-            connect(applicationId=applicationId, jobId=jobId, scheduleId=scheduleId)
-            print(f"Selected -> JobId: {jobId}, ScheduleId: {scheduleId}")
+            if response and not response.get('error'):
+                status = update_application_flow(
+                    applicationId=applicationId,
+                    jobId=jobId,
+                    scheduleId=scheduleId
+                )
+                if status.get("success", False):
+                    connect(applicationId=applicationId, jobId=jobId, scheduleId=scheduleId, jobDetails=jobDetails)
+                    print(f"Selected -> JobId: {jobId}, ScheduleId: {scheduleId}")

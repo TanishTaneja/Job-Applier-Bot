@@ -42,6 +42,8 @@ def init_jobs() -> Tuple[str, str]:
         return None, None
 
     job_id = first_job.get("jobId")
+    state = first_job.get("state")
+    employmentType = first_job.get("employmentType")
     if not isinstance(job_id, str):
         return None, None
 
@@ -57,4 +59,14 @@ def init_jobs() -> Tuple[str, str]:
     if not isinstance(schedule_id, str):
         return None, None
     
-    return job_id, schedule_id
+    job_details = {
+        job_id,
+        state,
+        employmentType,
+    }
+
+    schedule_details = {
+        schedule_id,
+    }
+    
+    return job_details, schedule_details
