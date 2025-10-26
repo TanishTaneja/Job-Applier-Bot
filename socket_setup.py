@@ -47,7 +47,6 @@ def on_message(ws, message):
             ws.close()
         else:
             print(f"Unknown message: {message}")
-            ws.close()
     except Exception as e:
         print("Error occured with message: " + message)
         print(e)
