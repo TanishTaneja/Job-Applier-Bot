@@ -47,6 +47,8 @@ def on_message(ws, message):
             ws.close()
         else:
             print(f"Unknown message: {message}")
+            if message.get("message") == "Internal server error":
+                ws.close()
     except Exception as e:
         print("Error occured with message: " + message)
         print(e)
