@@ -60,13 +60,13 @@ def init_jobs() -> Tuple[str, str]:
         return None, None
     
     job_details = {
-        job_id,
-        state,
-        employmentType,
+        "job_id": job_id,
+        "state": state,
+        "employmentType": employmentType,
     }
 
     schedule_details = {
-        schedule_id,
+        "schedule_id": schedule_id,
     }
     
     return job_details, schedule_details
